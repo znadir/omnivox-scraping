@@ -2,16 +2,18 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import colors from "colors";
 import loginPrompt from "./functions/loginPrompt.js";
 import loginOmnivox from "./functions/loginOmnivox.js";
 import welcome from "./functions/welcome.js";
 
+// all tricks to hide puppeteer usage
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+puppeteer.use(StealthPlugin());
+
 (async () => {
 	const { noDA, password } = loginPrompt();
 
-	puppeteer.use(StealthPlugin());
 	const browser = await puppeteer.launch({ headless: "new" });
 	const page = await browser.newPage();
 
