@@ -25,8 +25,5 @@ export default async (page) => {
 		(schoolName) => schoolName.innerText
 	);
 
-	console.log(
-		`Veuillez patienter pendant que nous scrappons ${schoolName} Omnivox`
-			.magenta
-	);
+	console.log(`Bienvenue au Omnivox de ${schoolName}`.magenta);
 };

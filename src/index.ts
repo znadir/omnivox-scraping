@@ -2,73 +2,51 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import puppeteer from "puppeteer-extra";
-import colors from "colors";
 import loginPrompt from "./functions/loginPrompt";
 import loginOmnivox from "./functions/loginOmnivox";
 import welcome from "./functions/welcome";
-// all tricks to hide puppeteer usage
+import promptSync from "prompt-sync";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+
+import voirNotes from "./functions/voirNotes";
 
 puppeteer.use(StealthPlugin());
 
 (async () => {
 	const { noDA, password } = loginPrompt();
 
-	const browser = await puppeteer.launch({ headless: "new" });
+	const browser = await puppeteer.launch({ headless: false });
 	const page = await browser.newPage();
 
 	await loginOmnivox(page, noDA, password);
 	await welcome(page);
 
-	// go to lea page
-	const selectLea = "#region-raccourcis-services-skytech > a.id-service_CVIE";
-	await page.waitForSelector(selectLea);
-	await page.click(selectLea);
+	let choice;
 
-	// fetch cours list
-	const selectCoursList = ".materialize-wrapper > div";
-	await page.waitForSelector(selectCoursList);
-	const coursList = await page.$$(selectCoursList);
+	do {
+		console.log("Quel outil voulez-vous utiliser?".cyan);
+		console.log("1. Remplir Google Agenda".cyan);
+		console.log("0. Quitter".red);
 
-	const nbCours = coursList.length;
-	console.log(("Vous suivez " + nbCours + " cours").cyan);
+		const prompt = promptSync({
+			sigint: true,
+		});
 
-	let moyenneTotale = 0;
-	let nbNotes = 0;
+		choice = prompt("Votre choix: ");
 
-	// loop through courses
-	for (let cours of coursList) {
-		const titreCours = await cours.$eval(
-			".card-panel-header > .card-panel-title",
-			(el: any) => el.innerText
-		);
-		console.log(titreCours);
-
-		try {
-			const moyenneCours = await cours.$eval(".pourcentage", (el: any) =>
-				parseInt(el.innerText.split("%")[0])
-			);
-			moyenneTotale += moyenneCours;
-			nbNotes++;
-
-			// Colorize grade corresponding to its value
-			let noteColor;
-			if (moyenneCours >= 60) {
-				noteColor = colors.green;
-			} else if (moyenneCours > 50) {
-				noteColor = colors.yellow;
-			} else {
-				noteColor = colors.red;
-			}
-
-			console.log(noteColor(`Moyenne: ${moyenneCours}%`));
-		} catch (err) {
-			console.log("Pas de note pour ce cours".gray);
+		switch (choice) {
+			case "1":
+				console.log("Sélection: Voir vos notes");
+				await voirNotes(page);
+				break;
+			case "0":
+				console.log("Bye".cyan);
+				break;
+			default:
+				console.log("Choix invalide".red);
+				break;
 		}
-	}
-
-	const moyenneGenerale = Math.round(moyenneTotale / nbNotes);
-	console.log(("Votre moyenne générale est de " + moyenneGenerale + "%").cyan);
+	} while (choice !== "0");
 
 	await browser.close();
 })();

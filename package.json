@@ -10,9 +10,11 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@google-cloud/local-auth": "2.1.0",
 		"@types/prompt-sync": "^4.2.0",
 		"colors": "^1.4.0",
 		"dotenv": "^16.3.1",
+		"googleapis": "105",
 		"prompt-sync": "^4.2.0",
 		"puppeteer": "^20.8.2",
 		"puppeteer-extra": "^3.3.6",
