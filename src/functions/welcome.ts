@@ -1,5 +1,5 @@
 import {} from "colors";
-import { onlyFirstCapital } from "../utils.js";
+import { onlyFirstCapital } from "../utils";
 
 /**
  * Welcome user to Omnivox scraper

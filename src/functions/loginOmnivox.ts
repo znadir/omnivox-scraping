@@ -8,7 +8,7 @@ import promptSync from "prompt-sync";
  * @param {string} noDA
  * @param {string} password
  */
-export default async (page, noDA, password) => {
+export default async (page, noDA: string, password: string) => {
 	const prompt = promptSync({
 		sigint: true,
 	});
@@ -28,9 +28,10 @@ export default async (page, noDA, password) => {
 	await page.click('button[type="submit"]');
 	await page.waitForNetworkIdle(0);
 
-	const errorLogin = await page.evaluate(
-		() => document.querySelector(".msg-erreur")?.innerText
-	);
+	const errorLogin = await page.evaluate(() => {
+		const el: HTMLElement = document.querySelector(".msg-erreur");
+		return el?.innerText;
+	});
 
 	if (errorLogin) {
 		console.log(errorLogin.red);

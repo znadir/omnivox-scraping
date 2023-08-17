@@ -3,12 +3,12 @@ dotenv.config();
 
 import puppeteer from "puppeteer-extra";
 import colors from "colors";
-import loginPrompt from "./functions/loginPrompt.js";
-import loginOmnivox from "./functions/loginOmnivox.js";
-import welcome from "./functions/welcome.js";
-
+import loginPrompt from "./functions/loginPrompt";
+import loginOmnivox from "./functions/loginOmnivox";
+import welcome from "./functions/welcome";
 // all tricks to hide puppeteer usage
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+
 puppeteer.use(StealthPlugin());
 
 (async () => {
@@ -40,12 +40,12 @@ puppeteer.use(StealthPlugin());
 	for (let cours of coursList) {
 		const titreCours = await cours.$eval(
 			".card-panel-header > .card-panel-title",
-			(el) => el.innerText
+			(el: any) => el.innerText
 		);
 		console.log(titreCours);
 
 		try {
-			const moyenneCours = await cours.$eval(".pourcentage", (el) =>
+			const moyenneCours = await cours.$eval(".pourcentage", (el: any) =>
 				parseInt(el.innerText.split("%")[0])
 			);
 			moyenneTotale += moyenneCours;
