@@ -25,7 +25,7 @@ puppeteer.use(StealthPlugin());
 
 	do {
 		console.log("Quel outil voulez-vous utiliser?".cyan);
-		console.log("1. Remplir Google Agenda".cyan);
+		console.log("1. Voir vos notes".cyan);
 		console.log("0. Quitter".red);
 
 		const prompt = promptSync({
